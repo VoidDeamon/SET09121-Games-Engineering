@@ -30,7 +30,7 @@ void Bullet::Render(sf::RenderWindow& window) {
 }
 
 void Bullet::Update(const float& dt) {
-	for (auto b : bullets) {
+	for (auto& b : bullets) {
         b._Update(dt);
 	};
 }
