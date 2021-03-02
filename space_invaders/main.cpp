@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "ship.h"
+#include "bullet.h"
 
 using namespace sf;
 using namespace std;
@@ -10,6 +11,7 @@ const int gameHeight = 600;
 sf::Texture spritesheet;
 sf::Sprite invader;
 std::vector<Ship*> ships;
+Ship* player;
 
 int invader_rows = 25;
 int invader_columns = 5;
@@ -22,6 +24,11 @@ void Load() {
     invader.setTextureRect(sf::IntRect(0, 0, 32, 32));
 
     Invader::speed = 20.0f;
+    Player::speed = 40.0f;
+
+    auto pla = new Player();
+    ships.push_back(pla);
+    player = pla;
     for (int r = 0; r < invader_rows; ++r) {
         auto rect = IntRect(0, 0, 32, 32);
         for (int c = 0; c < invader_columns; ++c) {
@@ -47,13 +54,14 @@ void Update(RenderWindow& window) {
     for (auto& s : ships) {
         s->Update(dt);
     };
+    Bullet::Update(dt);
 }
 
 void Render(RenderWindow& window) {
-    //window.draw(invader);
     for (const auto s : ships) {
         window.draw(*s);
     }
+    Bullet::Render(window);
 }
 
 int main() {

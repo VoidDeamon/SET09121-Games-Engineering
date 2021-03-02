@@ -6,6 +6,7 @@ protected:
     sf::IntRect _sprite;
     //Default constructor is hidden
     Ship();
+    bool _exploded = false;
 public:
     //Constructor that takes a sprite
     explicit Ship(sf::IntRect ir);
@@ -13,6 +14,8 @@ public:
     virtual ~Ship() = 0;
     //Update, virtual so can be overridden, but not pure virtual
     virtual void Update(const float& dt);
+    bool is_exploded() const;
+    virtual void Explode();
 };
 
 class Invader : public Ship {
@@ -26,6 +29,7 @@ public:
 
 class Player : public Ship {
 public:
+    static float speed;
     Player();
     void Update(const float& dt) override;
 };
