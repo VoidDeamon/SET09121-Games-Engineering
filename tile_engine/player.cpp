@@ -1,4 +1,7 @@
 #include "player.h"
+#include "LevelSystem.h"
+#include <iostream>
+
 using namespace sf;
 using namespace std;
 
@@ -18,7 +21,11 @@ void Player::Update(double dt) {
     if (Keyboard::isKeyPressed(Keyboard::Down)) {
         verticalDirection++;
     }
+    Vector2f position = getPosition();
     move(Vector2f(horizontalDirection * _speed * dt, verticalDirection * _speed * dt));
+    if (ls::getTileAt(getPosition()) == 3) {
+        setPosition(position);
+    }
 
         Entity::Update(dt);
 }
