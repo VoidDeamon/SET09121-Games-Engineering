@@ -3,6 +3,9 @@
 
 class EnemyAIComponent : public ActorMovementComponent {
 protected:
+    sf::Vector2f _direction;
+    enum state { ROAMING, ROTATING, ROTATED };
+    state _state;
 
 public:
     explicit EnemyAIComponent(Entity* p);

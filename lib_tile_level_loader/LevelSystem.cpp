@@ -109,6 +109,17 @@ void LevelSystem::buildSprites() {
     }
 }
 
+std::vector<sf::Vector2ul> LevelSystem::findTiles(TILE type) {
+    auto v = vector<sf::Vector2ul>();
+    for (size_t i = 0; i < LevelSystem::_width * _height; ++i) {
+        if (_tiles[i] == type) {
+            v.push_back({ i % _width, i / _width });
+        }
+    }
+
+    return v;
+}
+
 Vector2f LevelSystem::getTilePosition(Vector2ul p) {
     return (Vector2f(p.x, p.y) * _tileSize);
 }

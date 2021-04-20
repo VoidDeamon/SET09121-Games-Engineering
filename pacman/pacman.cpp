@@ -13,6 +13,8 @@ using namespace std;
 using namespace sf;
 
 Font font;
+shared_ptr<Entity> player;
+vector<shared_ptr<Entity>> ghosts;
 
 void Scene::render() {
 	_ents.render();
@@ -21,14 +23,6 @@ void Scene::render() {
 void Scene::update(double dt) {
 	_ents.update(dt);
 }
-
-/*void Scene::load() {
-	// player
-	auto temp = std::make_shared<Player>();
-	_ents.list.push_back(temp);
-	temp->setPosition(sf::Vector2f(450.0f, 450.0f));
-	// ghost
-} */
 
 std::vector<std::shared_ptr<Entity>>& Scene::getEnts() {
 	return _ents.list;
@@ -65,6 +59,7 @@ void GameScene::load() {
 		s->getShape().setOrigin(Vector2f(12.f, 12.f));
 
 		_ents.list.push_back(pl);
+		player = pl;
 	}
 
 	const sf::Color ghost_cols[]{ {208, 62, 25},    // red Blinky
@@ -81,17 +76,23 @@ void GameScene::load() {
 		ghost->addComponent<EnemyAIComponent>();
 
 		_ents.list.push_back(ghost);
+		ghosts.push_back(ghost);
 	}
 
-	/*for (int i = 0; i < 4; i++) {
-		auto ghost = make_shared<Entity>(this);
-		ghost->setPosition(Vector2f(100, 100));
-		auto s = ghost->addComponent<ShapeComponent>();
-		s->setShape<sf::CircleShape>(12.f);
-		_ents.list.push_back(ghost);
-	}*/
-	//auto player = make_shared<Entity>(this);
-	//_ents.list.push_back(player);
+	GameScene::respawn();
+}
+
+void GameScene::respawn() {
+	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
+	player->GetCompatibleComponent<ActorMovementComponent>()[0]
+		->setSpeed(150.f);
+
+	auto ghost_spawns = ls::findTiles(ls::ENEMY);
+	for (auto& g : ghosts) {
+		g->setPosition(
+			ls::getTilePosition(ghost_spawns[rand() % ghost_spawns.size()]));
+		g->GetCompatibleComponent<ActorMovementComponent>()[0]->setSpeed(100.0f);
+	}
 }
 
 void GameScene::update(double dt) {
@@ -99,7 +100,11 @@ void GameScene::update(double dt) {
 		activeScene = menuScene;
 	}
 	Scene::update(dt);
-	//...
+	for (auto& g : ghosts) {
+		if (length(g->getPosition() - player->getPosition()) < 30.0f) {
+			respawn();
+		}
+	}
 }
 
 void GameScene::render() {

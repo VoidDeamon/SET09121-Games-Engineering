@@ -8,7 +8,7 @@ using namespace sf;
 using namespace std;
 
 const int gameWidth = 800;
-const int gameHeight = 500;
+const int gameHeight = 800;
 
 EntityManager em;
 
