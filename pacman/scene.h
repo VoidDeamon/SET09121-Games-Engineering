@@ -1,4 +1,4 @@
-#include "Entity.h"
+#include "ecm.h"
 class Scene {
 public:
 	Scene() = default;
